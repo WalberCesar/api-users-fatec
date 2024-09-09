@@ -1,80 +1,77 @@
+require('dotenv').config();
+
 const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 
 const app = express();
-const port = 3000;
+const port = 3001;
+
 
 
 // Configuração do MySQL
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root', // Seu nome de usuário do MySQL
-    password: 'mysql@123', // Sua senha do MySQL
-    database: 'usersdb'
-  });
-  
-  // Conectar ao banco de dados
-  connection.connect((err) => {
-    if (err) throw err;
-    console.log('Conectado ao banco de dados MySQL');
-  });
-  
-  // Middleware para analisar corpos de solicitação
-  app.use(bodyParser.json());
-  
-  // Rotas CRUD
+  host: 'localhost',
+  user: process.env.MYSQL_USER, // Seu nome de usuário do MySQL
+  password: process.env.MYSQL_ROOT_PASSWORD, // Sua senha do MySQL
+  database: process.env.MYSQL_DATABASE,
+});
+
+// Conectar ao banco de dados
+connection.connect((err) => {
+  if (err) throw err;
+  console.log('Conectado ao banco de dados MySQL');
+});
+
+// Middleware para analisar corpos de solicitação
+app.use(bodyParser.json());
+
+// Rotas CRUD
 
 // Criar usuário
 app.post('/users', (req, res) => {
-    const { name, email } = req.body;
-    const INSERT_USER_QUERY = `INSERT INTO users (name, email) VALUES (?, ?)`;
-    connection.query(INSERT_USER_QUERY, [name, email], (err, results) => {
-      if (err) throw err;
-      res.send('Usuário criado com sucesso');
-    });
+  const { name, email } = req.body;
+  const INSERT_USER_QUERY = `INSERT INTO users (name, email) VALUES (?, ?)`;
+  connection.query(INSERT_USER_QUERY, [name, email], (err, results) => {
+    if (err) throw err;
+    res.send('Usuário criado com sucesso');
   });
+});
 
-  app.put('/users/:id', (req, res) => {
-    const userId = req.params.id;
-    const { name, email } = req.body;
-    const UPDATE_USER_QUERY = `Update users set name = ?, email = ?  where id = ?`;
-    connection.query(UPDATE_USER_QUERY, [name, email,userId], (err, results) => {
-      if (err) throw err;
-      res.send('Usuário atualizado com sucesso');
-    });
+// Obter todos os usuários
+app.get('/users', (req, res) => {
+  connection.query('SELECT * FROM users', (err, results) => {
+    if (err) throw err;
+    res.json(results);
   });
-  
-  app.delete('/users/:id', (req, res) => {
-    const userId = req.params.id;
-    const DELETE_USER_QUERY = `Delete from users where id = ?`;
-    connection.query(DELETE_USER_QUERY, [userId], (err, results) => {
-      if (err) throw err;
-      res.send('Usuário apagado com sucesso');
-    });
+});
+
+// Obter um usuário por ID
+app.get('/users/:id', (req, res) => {
+  const userId = req.params.id;
+  const SELECT_USER_QUERY = `SELECT * FROM users WHERE id = ?`;
+  connection.query(SELECT_USER_QUERY, [userId], (err, results) => {
+    if (err) throw err;
+    res.json(results);
   });
-  // Obter todos os usuários
-  app.get('/users', (req, res) => {
-    connection.query('SELECT * FROM users', (err, results) => {
-      if (err) throw err;
-      res.json(results);
-    });
+});
+
+// Atualiza usuário
+app.put('/users/:id', (req, res) => {
+  const userId = req.params.id
+  const { name, email } = req.body;
+  const UPDATE_USER_QUERY = `UPDATE users set name = ?, email = ? WHERE ID = ?`;
+  connection.query(UPDATE_USER_QUERY, [name, email, userId], (err, results) => {
+    if (err) throw err;
+    res.send('Usuário criado com sucesso');
   });
-  
-  // Obter um usuário por ID
-  app.get('/users/:id', (req, res) => {
-    const userId = req.params.id;
-    const SELECT_USER_QUERY = `SELECT * FROM users WHERE id = ?`;
-    connection.query(SELECT_USER_QUERY, [userId], (err, results) => {
-      if (err) throw err;
-      res.json(results);
-    });
-  });
-  
-  
-  
-  // Iniciar o servidor
-  app.listen(port, () => {
-    console.log(`Servidor rodando na porta ${port}`);
-  });
-  
+});
+
+
+
+// Iniciar o servidor
+ const server = app.listen(port, () => {
+  console.log(`Servidor rodando na porta ${port}`);
+});
+
+module.exports = {app, server, connection}
