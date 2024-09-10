@@ -14,14 +14,14 @@ jobs:
       mysql:
         image: mysql:8.4
         env:
-          MYSQL_ROOT_PASSWORD: '123456'
+          MYSQL_ROOT_PASSWORD: '0896'
           MYSQL_DATABASE: 'usersdb'
         ports:
           - 3306:3306
     env:
         MYSQL_HOST: 'localhost'
         MYSQL_USER: 'root'
-        MYSQL_PASSWORD: '123456'
+        MYSQL_PASSWORD: '0896'
         MYSQL_DATABASE: 'usersdb' 
 
     steps:
