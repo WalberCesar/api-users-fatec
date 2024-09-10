@@ -6,7 +6,7 @@ async function createDatabase() {
     const connection = await mysql.createConnection({
       host: 'localhost', // Use o nome do host do seu contêiner MySQL
       user:  process.env.MYSQL_USER, // Seu nome de usuário do MySQL
-      password: process.env.MYSQL_ROOT_PASSWORD,
+      password: process.env.MYSQL_PASSWORD,
  
     });
  
@@ -24,7 +24,7 @@ async function createTables() {
     const connection = await mysql.createConnection({
         host: 'localhost', // Use o nome do host do seu contêiner MySQL
         user:  process.env.MYSQL_USER, // Seu nome de usuário do MySQL
-        password: process.env.MYSQL_ROOT_PASSWORD,
+        password: process.env.MYSQL_PASSWORD,
         database: process.env.MYSQL_DATABASE
     });
  

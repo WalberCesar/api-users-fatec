@@ -13,7 +13,7 @@ const port = 3000;
 const connection = mysql.createConnection({
   host: 'localhost',
   user: process.env.MYSQL_USER, // Seu nome de usuário do MySQL
-  password: process.env.MYSQL_ROOT_PASSWORD, // Sua senha do MySQL
+  password: process.env.MYSQL_PASSWORD, // Sua senha do MySQL
   database: process.env.MYSQL_DATABASE,
 });
 
