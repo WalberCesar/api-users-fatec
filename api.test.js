@@ -8,14 +8,14 @@ describe('Teste GET /users', () => {
   });
 });
 
-beforeAll(() => {
-  server.on('error', async (e) => {
-    if (e.code === 'EADDRINUSE') {
-      console.log(e.code)
-      await server.close()
-    }
-  });
-})
+// beforeAll(() => {
+//   server.on('error', async (e) => {
+//     if (e.code === 'EADDRINUSE') {
+//       console.log(e.code)
+//       await server.close()
+//     }
+//   });
+// })
 
 afterAll(()=>{
     server.close();
